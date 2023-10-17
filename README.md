@@ -342,4 +342,48 @@ In conclusion, the Logistic Regression model trained on the cardiac data achieve
 
 </details>
 
+## Case Study: Predicting the Best Sport Using LDA in RapidMiner
+
+<details>
+<summary><strong>View study case</strong></summary>
+
+### Introduction
+In this case study, we aim to predict which sport (among Football, Rugby, Volleyball, and Basketball) an individual is best suited for based on various attributes. The dataset utilized is named 'sportis_training.csv'.
+
+### Objective
+Our primary goal is to understand and enhance the predictive capabilities of Linear Discriminant Analysis (LDA) in discerning the optimal sport for a given individual based on their characteristics.
+
+### Methodology
+1. **Retrieving the Dataset**:
+  - The data was sourced from sportis_training.csv.
+2. **Data Preprocessing**:
+  - Filtering Outliers: We filtered out records where the "Capacidad de decision" was outside the range [2, 101].
+3. **Setting the Target Variable**:
+  - The attribute "DeportePrimario" was set as the label, indicating the primary sport.
+4. **Modeling and Validation**:
+  - We utilized a Cross Validation approach to ensure that our model's performance was consistent across different subsets of the data.
+      - Training (Left side): The data was trained using the Linear Discriminant Analysis (LDA) algorithm.
+      - Testing (Right side): The model derived from the training phase was applied to the test data, and its performance was assessed.
+   
+### Results and Conclusion
+The following confusion matrix details the prediction results:
+
+```
+True Football  True Rugby  True Volleyball  True Basketball  Class Precision
+Predicted Football     101          38           67                35           41.91%
+Predicted Rugby         29          54           15                30           42.19%
+Predicted Volleyball    18          9            23                12           37.10%
+Predicted Basketball    8           15           6                 22           43.14%
+
+Class Recall             64.74%       46.55%       20.72%            22.22%
+``` 
+
+**Insights**:
+
+- The highest class precision was observed for Basketball predictions at 43.14%, while the lowest was for Volleyball at 37.10%.
+- In terms of recall, Football had the highest recall rate at 64.74%, indicating that of all the actual Football instances, about 64.74% were correctly predicted by the model. On the other hand, Volleyball had the lowest recall at 20.72%.
+- Overall, the LDA model's predictive accuracy can be enhanced, given the relatively modest precision and recall percentages across the sports.
+- Future recommendations include exploring other features, experimenting with different algorithms, or refining the current preprocessing steps to improve the model's predictions.
+  
+</details>
 
