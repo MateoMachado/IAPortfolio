@@ -69,11 +69,11 @@ The primary aim is to leverage machine learning, specifically Linear Regression 
 1. **Data Acquisition:** 
    The data was uploaded to the working environment using the Google Colab platform's file upload feature.
 
-\```python
+\``
 from google.colab import files
 uploaded = files.upload()
 filename = list(uploaded.keys())[0]
-\```
+``
 
 2. **Data Preprocessing:** 
    - Loaded the dataset from a CSV file.
@@ -83,7 +83,7 @@ filename = list(uploaded.keys())[0]
    - Normalized the dataset to scale features between 0 and 1.
    - Standardized the dataset using the calculated mean and standard deviation.
 
-\```python
+\``
 dataset = load_csv(filename)
 for i in range(len(dataset[0])): 
     str_column_to_float(dataset, i)
@@ -95,14 +95,14 @@ stdevs = column_stdevs(dataset, means)
 normalize_dataset(dataset, minmax)
 dataset_copy = [row.copy() for row in dataset]
 standardize_dataset(dataset_copy, means, stdevs)
-\```
+``
 
 3. **Data Splitting:** 
    The dataset was split into training and testing sets, using a 60:40 ratio.
 
-\```python
+\``
 train, test = train_test_split(dataset)
-\```
+``
 
 4. **Model Training and Evaluation:** 
    - Utilized the `LinearRegression` model from Scikit-Learn.
@@ -111,7 +111,7 @@ train, test = train_test_split(dataset)
    - Predicted wine quality on the testing set.
    - Evaluated the model's performance using the Mean Squared Error (MSE) metric.
 
-\```python
+\``python
 mse = evaluate_linear_regression(train, test)
 \```
 
@@ -119,25 +119,25 @@ mse = evaluate_linear_regression(train, test)
 
 - **Data Overview:**
   Here's a snapshot of the first few rows of the dataset:
-  \```
+  \``
   ['1', '14.23', '1.71', ... '3.92', '1065']
   ['1', '13.2', '1.78', ... '3.4', '1050']
   ...
-  \```
+  ``
 
 - **Statistical Overview:**
   - Minimum and Maximum of each column:
-  \```
+  \``
   [[1.0, 3.0], [11.03, 14.83], ... [278.0, 1680.0]]
-  \```
+  ``
   - Mean of each column:
-  \```
+  \``
   [1.938, 13.001, ... 2.611, 746.893]
-  \```
+  ``
   - Standard deviation of each column:
-  \```
+  \``
   [0.775, 0.812, ... 0.710, 314.907]
-  \```
+  ``
 
 - **Model Metrics:** 
   The trained Linear Regression model achieved an MSE of 0.02. This low value indicates that the model has done a relatively good job of predicting wine quality, with minimal errors between the predicted and actual values.
