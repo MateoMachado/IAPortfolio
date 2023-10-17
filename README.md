@@ -56,6 +56,9 @@ Throughout my academic experience in the "Introduction to Automatic Learning Met
 
 ## Predictive Analysis Case Study on Wine Quality
 
+<details>
+  <summary>View study case</summary>
+
 ### Introduction
 In this case study, we focus on a dataset that contains various chemical properties of wines. The dataset provides several attributes of wines, and our goal is to leverage these features to predict a particular attribute of interest.
 
@@ -80,9 +83,15 @@ The primary aim is to implement a machine learning model, specifically linear re
 ### Results
 
 **Basic Dataset Statistics**:
-- **Column Min-Max**: [[1.0, 3.0], [11.03, 14.83], [0.74, 5.8], [1.36, 3.23], [10.6, 30.0], [70.0, 162.0], [0.98, 3.88], [0.34, 5.08], [0.13, 0.66], [0.41, 3.58], [1.28, 13.0], [0.48, 1.71], [1.27, 4.0], [278.0, 1680.0]]
-- **Means**: [1.9382022471910112, 13.000617977528083, 2.336348314606741, 2.3665168539325854, 19.49494382022472, 99.74157303370787, 2.295112359550562, 2.0292696629213474, 0.36185393258426973, 1.5908988764044953, 5.058089882022473, 0.9574494382022468, 2.6116853932584254, 746.8932584269663]
-- **Standard Deviations**: [0.7750349899850565, 0.8118265380058577, 1.1171460976144627, 0.2743440090608148, 3.3395637671735052, 14.282483515295668, 0.6258510488339891, 0.9988586850169465, 0.12445334029667939, 0.5723588626747611, 2.318285871822413, 0.22857156582982338, 0.7099904287650505, 314.9074742768489]
+- **Column Min-Max**:
+  ``[[1.0, 3.0], [11.03, 14.83], [0.74, 5.8], [1.36, 3.23], [10.6, 30.0], [70.0, 162.0], [0.98, 3.88], [0.34, 5.08], [0.13, 0.66], [0.41, 3.58], [1.28, 13.0], [0.48, 1.71], [1.27, 4.0], [278.0, 1680.0]]
+  ``
+- **Means**:
+  ``[1.9382022471910112, 13.000617977528083, 2.336348314606741, 2.3665168539325854, 19.49494382022472, 99.74157303370787, 2.295112359550562, 2.0292696629213474, 0.36185393258426973, 1.5908988764044953, 5.058089882022473, 0.9574494382022468, 2.6116853932584254, 746.8932584269663]
+  ``
+- **Standard Deviations**:
+  ``[0.7750349899850565, 0.8118265380058577, 1.1171460976144627, 0.2743440090608148, 3.3395637671735052, 14.282483515295668, 0.6258510488339891, 0.9988586850169465, 0.12445334029667939, 0.5723588626747611, 2.318285871822413, 0.22857156582982338, 0.7099904287650505, 314.9074742768489]
+  ``
 
 
 **Linear Regression Performance**:
@@ -227,6 +236,110 @@ train, test = train_test_split(dataset)
 mse = evaluate_linear_regression(train, test)
 print(f'Linear Regression MSE: {mse:.2f}')
 ```
+</details>
+
+</details>
+
+
+## Case Study: Predicting Cardiac Events using Logistic Regression
+<details>
+<summary><strong>View study case</strong></summary>
+  
+### Introduction
+
+Heart disease remains one of the leading causes of death globally. Timely predictions and interventions can lead to better patient outcomes. Using machine learning, it's possible to utilize historic patient data to predict future cardiac events. For this study, we used a dataset named `cardiac-training.csv` which contains various patient parameters.
+
+### Objective
+
+Our primary goal with this machine learning experiment is to predict whether a patient would experience a second heart attack. This is a binary classification problem where outcomes are classified as 'Si' (Yes) and 'No'.
+
+### Methodology
+1. **Data Acquisition and Inspection**: The first step involved reading our dataset and getting an insight into its composition.
+
+   ```python
+   import pandas as pd
+
+   input_file = "cardiac-training.csv"
+   df = pd.read_csv(input_file, header=0)
+   print(df.values)
+   ```
+
+2. **Data Preparation**: We segregated our data into features (X) and the target variable (y). The target for our prediction is the '2do_Ataque_Corazon' column.
+  ```python
+  X = df.loc[:, df.columns != '2do_Ataque_Corazon']
+  y = df['2do_Ataque_Corazon'].values
+  ```
+
+3. **Training & Testing Split**: To evaluate the model's performance, the dataset was split into training and testing sets, with 70% of the data used for training and 30% reserved for testing.
+
+    ```python
+    from sklearn.model_selection import train_test_split
+    train_X, test_X, train_y, test_y = train_test_split(X, y, test_size=0.30, random_state=0, shuffle=True)
+    ```
+
+4. **Model Creation and Training**: A Logistic Regression model was chosen for this binary classification task. The model was then trained on the training data.
+
+  ```python
+  from sklearn.linear_model import LogisticRegression
+  
+  lr = LogisticRegression(max_iter=10000)  # Increased iterations for convergence
+  lr = lr.fit(train_X, train_y)
+  ```
+
+5. **Model Evaluation**: The trained model was used to predict outcomes on the test data. These predictions were then compared against the true outcomes to evaluate the model's performance.
+
+  ```python
+  # Predicting the classes for test data
+  y_pred = lr.predict(test_X)
+  print("Predicted vs Expected:")
+  print(y_pred)
+  print(test_y)
+  
+  # Displaying the classification report
+  print("Displaying the classification report")
+  print(classification_report(test_y, y_pred, digits=3))
+  
+  # Displaying the confusion matrix
+  print("Displaying the confusion matrix")
+  print(confusion_matrix(test_y, y_pred))
+  ```
+
+### Results and Conclusion
+
+- Predictions: A snapshot comparison of the predicted vs. expected outcomes was as follows:
+  
+  ``
+  Predicted: ['No', 'Si', 'No', ...]
+  ``
+
+  ``
+  Expected:  ['No', 'Si', 'No', ...]
+  `` 
+- Classification Report:
+
+  - Accuracy: The model achieved an accuracy of 90.5% on the test data.
+  - Precision for 'No': 94.1%
+  - Precision for 'Si': 88.0%
+  - Recall for 'No': 84.2%
+  - Recall for 'Si': 95.7%
+
+This indicates that our model is fairly reliable in its predictions, with a slight inclination to predict 'Si' more accurately.
+
+- Confusion Matrix:
+  
+  ``
+  [[16  3]
+  ``
+
+  ``
+  [ 1 22]]
+  ``
+
+The model made 3 false positives and 1 false negative predictions.
+
+
+In conclusion, the Logistic Regression model trained on the cardiac data achieved satisfactory results, making it a potential tool for predicting second cardiac events in patients. However, like any machine learning model, it's essential to continuously train it on new data to adapt to any changing patterns.
+
 </details>
 
 
