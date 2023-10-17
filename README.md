@@ -69,11 +69,11 @@ The primary aim is to leverage machine learning, specifically Linear Regression 
 1. **Data Acquisition:** 
    The data was uploaded to the working environment using the Google Colab platform's file upload feature.
 
-\``
+\`
 from google.colab import files
 uploaded = files.upload()
 filename = list(uploaded.keys())[0]
-``
+`
 
 2. **Data Preprocessing:** 
    - Loaded the dataset from a CSV file.
