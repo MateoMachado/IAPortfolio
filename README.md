@@ -54,98 +54,179 @@ Throughout my academic experience in the "Introduction to Automatic Learning Met
 
 - **Python**: A flexible scripting language, enhanced with libraries like scikit-learn, for a wide spectrum of machine learning applications.
 
-# Cross-sectional Case Study: Predictive Analysis on Wine Quality
+## Predictive Analysis Case Study on Wine Quality
 
-## Introduction:
+### Introduction
+In this case study, we focus on a dataset that contains various chemical properties of wines. The dataset provides several attributes of wines, and our goal is to leverage these features to predict a particular attribute of interest.
 
-The wine industry has always been associated with the quality of its products. Factors such as the alcohol content, acidity, and residual sugar can all contribute to the taste, longevity, and overall appreciation of wine. The given dataset provides numeric features representing these factors among others, making it a suitable candidate for predictive modeling to understand the determinants of wine quality.
+### Objective
+The primary aim is to implement a machine learning model, specifically linear regression, to predict a continuous value in the dataset based on other features. Through this predictive analysis, we intend to understand the relationships between different wine properties.
 
-## Objective:
+### Methodology
 
-The primary aim is to leverage machine learning, specifically Linear Regression in this case, to understand the relationship between various attributes of wine and its quality. This predictive model can potentially serve as a tool for vintners to improve their wine production process by focusing on attributes that significantly impact quality.
+1. **Data Acquisition and Loading**: The data was loaded using Python's `csv.reader` method.
 
-## Methodology:
+2. **Data Preprocessing**: This involved multiple steps:
+   - Conversion of string columns to float for computational purposes.
+   - Calculation of the min and max values for each column to understand data range.
+   - Normalization of the dataset to bring values between 0 and 1.
+   - Calculation of column means and standard deviations, which can be critical for certain algorithms.
+   - Standardization of the dataset using the previously computed means and standard deviations.
 
-1. **Data Acquisition:** 
-   The data was uploaded to the working environment using the Google Colab platform's file upload feature.
+3. **Data Splitting**: The dataset was split into a training set and a test set, with the training set containing 60% of the data.
 
-\`
+4. **Model Implementation and Evaluation**: We used the Linear Regression model from `sklearn` for this task. After training the model on the training set, its performance was evaluated on the test set using Mean Squared Error (MSE) as the evaluation metric.
+
+### Results
+
+**Basic Dataset Statistics**:
+- **Column Min-Max**: [[1.0, 3.0], [11.03, 14.83], [0.74, 5.8], [1.36, 3.23], [10.6, 30.0], [70.0, 162.0], [0.98, 3.88], [0.34, 5.08], [0.13, 0.66], [0.41, 3.58], [1.28, 13.0], [0.48, 1.71], [1.27, 4.0], [278.0, 1680.0]]
+- **Means**: [1.9382022471910112, 13.000617977528083, 2.336348314606741, 2.3665168539325854, 19.49494382022472, 99.74157303370787, 2.295112359550562, 2.0292696629213474, 0.36185393258426973, 1.5908988764044953, 5.058089882022473, 0.9574494382022468, 2.6116853932584254, 746.8932584269663]
+- **Standard Deviations**: [0.7750349899850565, 0.8118265380058577, 1.1171460976144627, 0.2743440090608148, 3.3395637671735052, 14.282483515295668, 0.6258510488339891, 0.9988586850169465, 0.12445334029667939, 0.5723588626747611, 2.318285871822413, 0.22857156582982338, 0.7099904287650505, 314.9074742768489]
+
+
+**Linear Regression Performance**:
+- **MSE**: 0.02
+
+### Conclusion
+The linear regression model achieved an MSE of 0.02, which indicates a fairly low error rate in the predictions. The basic statistics, like column min-max, means, and standard deviations, offer insights into the distribution and variability of the data. This predictive analysis showcases the potential of machine learning in deriving meaningful insights from wine property data and its capability in predicting wine attributes.
+
+<details>
+  <summary><strong>Click to view Python code for this analysis</strong></summary>
+  
+```python
+from csv import reader
+from math import sqrt
+from random import seed, randrange
+from sklearn.linear_model import LinearRegression
+
+
+
+# Load a CSV file
+def load_csv(filename):
+    dataset = list()
+    with open(filename, 'r') as file:
+        csv_reader = reader(file)
+        for row in csv_reader:
+            if not row:
+                continue
+            dataset.append(row)
+    return dataset
+
+# Convert string column to float
+def str_column_to_float(dataset, column):
+    for row in dataset:
+        row[column] = float(row[column].strip())
+
+# Find the min and max values for each column
+def dataset_minmax(dataset):
+    minmax = list()
+    for i in range(len(dataset[0])):
+        col_values = [row[i] for row in dataset]
+        value_min = min(col_values)
+        value_max = max(col_values)
+        minmax.append([value_min, value_max])
+    return minmax
+
+# Rescale dataset columns to the range 0-1
+def normalize_dataset(dataset, minmax):
+    for row in dataset:
+        for i in range(len(row)):
+            row[i] = (row[i] - minmax[i][0]) / (minmax[i][1] - minmax[i][0])
+
+# Calculate column means
+def column_means(dataset):
+    means = [0 for i in range(len(dataset[0]))]
+    for i in range(len(dataset[0])):
+        col_values = [row[i] for row in dataset]
+        means[i] = sum(col_values) / float(len(dataset))
+    return means
+
+# Calculate column standard deviations
+def column_stdevs(dataset, means):
+    stdevs = [0 for i in range(len(dataset[0]))]
+    for i in range(len(dataset[0])):
+        variance = [pow(row[i]-means[i], 2) for row in dataset]
+        stdevs[i] = sum(variance)
+    stdevs = [sqrt(x/(float(len(dataset)-1))) for x in stdevs]
+    return stdevs
+
+# Standardize dataset
+def standardize_dataset(dataset, means, stdevs):
+    for row in dataset:
+        for i in range(len(row)):
+            row[i] = (row[i] - means[i]) / stdevs[i]
+
+# Split a dataset into a train and test set
+def train_test_split(dataset, split=0.60):
+    train = list()
+    train_size = split * len(dataset)
+    dataset_copy = list(dataset)
+    while len(train) < train_size:
+        index = randrange(len(dataset_copy))
+        train.append(dataset_copy.pop(index))
+    return train, dataset_copy
+
+def evaluate_linear_regression(train, test):
+    # Extracting features and labels
+    train_x = [row[:-1] for row in train]
+    train_y = [row[-1] for row in train]
+
+    test_x = [row[:-1] for row in test]
+    test_y = [row[-1] for row in test]
+
+    # Creating the regressor
+    regressor = LinearRegression()
+
+    # Training the regressor
+    regressor.fit(train_x, train_y)
+
+    # Predicting the values of the test set
+    predicted = regressor.predict(test_x)
+
+    # Calculating MSE (or another appropriate metric)
+    mse = sum([(predicted[i] - test_y[i])**2 for i in range(len(test_y))]) / len(test_y)
+
+    return mse
+
+# Upload the dataset to Google Colab
 from google.colab import files
 uploaded = files.upload()
-filename = list(uploaded.keys())[0]
-`
+filename = list(uploaded.keys())[0]  # Assuming you've uploaded only one file
 
-2. **Data Preprocessing:** 
-   - Loaded the dataset from a CSV file.
-   - Converted the string values in the dataset to float for computational purposes.
-   - Determined and printed the minimum and maximum values for each column.
-   - Calculated the mean and standard deviation for each column.
-   - Normalized the dataset to scale features between 0 and 1.
-   - Standardized the dataset using the calculated mean and standard deviation.
-
-\``
 dataset = load_csv(filename)
-for i in range(len(dataset[0])): 
+
+for row in dataset[:10]:
+    print(row)
+
+for i in range(len(dataset[0])):  # Assuming all columns should be converted
     str_column_to_float(dataset, i)
 
 minmax = dataset_minmax(dataset)
+print("Printing min and max of each column")
+print(minmax)  # This will print a list of [min, max] for each column
+
 means = column_means(dataset)
+print("Means")
+print(means)
+
 stdevs = column_stdevs(dataset, means)
+print("Standard deviation of each column")
+print(stdevs)
 
 normalize_dataset(dataset, minmax)
-dataset_copy = [row.copy() for row in dataset]
+
+dataset_copy = [row.copy() for row in dataset]  # Creating a copy
 standardize_dataset(dataset_copy, means, stdevs)
-``
 
-3. **Data Splitting:** 
-   The dataset was split into training and testing sets, using a 60:40 ratio.
-
-\``
 train, test = train_test_split(dataset)
-``
+print(f"Training set size: {len(train)}")
+print(f"Testing set size: {len(test)}")
 
-4. **Model Training and Evaluation:** 
-   - Utilized the `LinearRegression` model from Scikit-Learn.
-   - Extracted features and target labels from the training set.
-   - Trained the linear regression model on the training set.
-   - Predicted wine quality on the testing set.
-   - Evaluated the model's performance using the Mean Squared Error (MSE) metric.
-
-\``python
+train, test = train_test_split(dataset)
 mse = evaluate_linear_regression(train, test)
-\```
-
-## Results and Conclusion:
-
-- **Data Overview:**
-  Here's a snapshot of the first few rows of the dataset:
-  \``
-  ['1', '14.23', '1.71', ... '3.92', '1065']
-  ['1', '13.2', '1.78', ... '3.4', '1050']
-  ...
-  ``
-
-- **Statistical Overview:**
-  - Minimum and Maximum of each column:
-  \``
-  [[1.0, 3.0], [11.03, 14.83], ... [278.0, 1680.0]]
-  ``
-  - Mean of each column:
-  \``
-  [1.938, 13.001, ... 2.611, 746.893]
-  ``
-  - Standard deviation of each column:
-  \``
-  [0.775, 0.812, ... 0.710, 314.907]
-  ``
-
-- **Model Metrics:** 
-  The trained Linear Regression model achieved an MSE of 0.02. This low value indicates that the model has done a relatively good job of predicting wine quality, with minimal errors between the predicted and actual values.
-
-- **Insights Gained:**
-  The model's low MSE suggests that the features in the dataset have a significant impact on determining wine quality. This insight can be valuable for wine producers, enabling them to prioritize factors that most influence wine quality.
-
-- **Concluding Remarks:** 
-  Machine Learning, particularly regression analysis, provides an effective approach to understanding the determinants of wine quality. Future studies could delve deeper by employing more complex models, feature engineering, or even looking into different evaluation metrics to gain a broader understanding of the wine production process and quality determinants.
+print(f'Linear Regression MSE: {mse:.2f}')
+```
+</details>
 
 
